@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+
+import getopt
+import sys
+from random import SystemRandom
+
+cryptogen = SystemRandom()
+optlist, args = getopt.getopt(sys.argv[1:], 'sy')
+
+use_symbols = False
+
+for o, a in optlist:
+	if o == '-y':
+		use_symbols = True
+	elif o == '-s':
+		pass
+	else:
+		print('Unknown option: {0}'.format(o), file=sys.stderr)
+		exit(1)
+
+if len(args) < 1:
+	print('Missing required argument: length', file=sys.stderr)
+	exit(2)
+
+pool="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+if use_symbols:
+	pool = pool + "=.+\"'[]()_~-!%+?" * 3
+
+print(''.join([pool[k] for k in [cryptogen.randrange(len(pool)) for i in range(int(args[0]))]]))
+
